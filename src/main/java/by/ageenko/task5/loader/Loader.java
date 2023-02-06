@@ -1,6 +1,6 @@
 package by.ageenko.task5.loader;
 
-import by.ageenko.task5.exception.CustomRunTimeException;
+import by.ageenko.task5.exception.CustomRuntimeException;
 import by.ageenko.task5.entity.Pier;
 import by.ageenko.task5.entity.Port;
 import by.ageenko.task5.entity.Ship;
@@ -32,13 +32,15 @@ public class Loader implements Runnable {
                         time.sleep(1);
                         ship.addContainer(1);
                         port.removeContainer(1);
-                        logger.log(Level.INFO, ship.getContainerAmount() + " Loaded container on ship " +ship.getShipId() + " "+ Thread.currentThread().getName());
+                        logger.log(Level.INFO, ship.getContainerAmount() + " Loaded container on ship " + ship.getShipId() + " " + Thread.currentThread().getName());
                         logger.log(Level.INFO, port.getStockSize() + "  container in stock.");
                     }
-                    logger.log(Level.INFO,"The ship id = {} has finished loading at the pier {}", ship.getShipId(), pier.getId());
+                    logger.log(Level.INFO, "The ship id = {} has finished loading at the pier {}", ship.getShipId(), pier.getId());
                 }
             } catch (InterruptedException e) {
-                throw new CustomRunTimeException(e);
+                throw new CustomRuntimeException(e);
+            }if (port.isStockEmpty()|| port.getShip() == null){
+                break;
             }
         }
     }

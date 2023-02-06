@@ -18,8 +18,8 @@ public class Main {
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         executorService.execute(shipGenerator);
         executorService.execute(loader);
-        //executorService.execute(loader1);
-        //executorService.execute(loader2);
+        executorService.execute(loader1);
+        executorService.execute(loader2);
         executorService.shutdown();
 
     }

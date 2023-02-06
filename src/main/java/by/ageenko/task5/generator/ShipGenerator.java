@@ -1,6 +1,6 @@
 package by.ageenko.task5.generator;
 
-import by.ageenko.task5.exception.CustomRunTimeException;
+import by.ageenko.task5.exception.CustomRuntimeException;
 import by.ageenko.task5.entity.Port;
 import by.ageenko.task5.entity.Ship;
 import org.apache.logging.log4j.Level;
@@ -32,7 +32,7 @@ public class ShipGenerator implements Runnable {
         try {
             time.sleep(1);
         } catch (InterruptedException e) {
-            throw new CustomRunTimeException(e);
+            throw new CustomRuntimeException(e);
         }
         logger.log(Level.INFO, "Generator ship stoped working");
     }
