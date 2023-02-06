@@ -1,4 +1,4 @@
-package by.ageenko.task5.Exception;
+package by.ageenko.task5.exception;
 
 public class CustomRunTimeException extends RuntimeException{
     public CustomRunTimeException() {

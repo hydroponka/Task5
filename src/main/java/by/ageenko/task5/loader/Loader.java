@@ -1,6 +1,6 @@
 package by.ageenko.task5.loader;
 
-import by.ageenko.task5.Exception.CustomRunTimeException;
+import by.ageenko.task5.exception.CustomRunTimeException;
 import by.ageenko.task5.entity.Pier;
 import by.ageenko.task5.entity.Port;
 import by.ageenko.task5.entity.Ship;
@@ -8,8 +8,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Random;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class Loader implements Runnable {

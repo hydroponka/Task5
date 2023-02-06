@@ -1,6 +1,6 @@
 package by.ageenko.task5.generator;
 
-import by.ageenko.task5.Exception.CustomRunTimeException;
+import by.ageenko.task5.exception.CustomRunTimeException;
 import by.ageenko.task5.entity.Port;
 import by.ageenko.task5.entity.Ship;
 import org.apache.logging.log4j.Level;

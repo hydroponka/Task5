@@ -1,13 +1,11 @@
 package by.ageenko.task5.entity;
 
-import by.ageenko.task5.Exception.CustomRunTimeException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class Port {
