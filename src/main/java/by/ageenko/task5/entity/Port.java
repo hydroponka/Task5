@@ -62,10 +62,10 @@ public class Port {
     }
 
     public synchronized boolean isStockFull() {
-        return stockSize != MAX_STOCK_SIZE;
+        return stockSize == MAX_STOCK_SIZE;
     }
 
-    public synchronized boolean isStockEmpty() {
-        return stockSize != MIN_STOCK_SIZE;
+    public boolean isStockEmpty() {
+        return stockSize == MIN_STOCK_SIZE;
     }
 }

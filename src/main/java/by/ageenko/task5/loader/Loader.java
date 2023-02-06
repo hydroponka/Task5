@@ -36,11 +36,9 @@ public class Loader implements Runnable {
                         logger.log(Level.INFO, port.getStockSize() + "  container in stock.");
                     }
                     logger.log(Level.INFO, "The ship id = {} has finished loading at the pier {}", ship.getShipId(), pier.getId());
-                }
+                }else break;
             } catch (InterruptedException e) {
                 throw new CustomRuntimeException(e);
-            }if (port.isStockEmpty()|| port.getShip() == null){
-                break;
             }
         }
     }
