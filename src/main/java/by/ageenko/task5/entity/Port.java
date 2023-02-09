@@ -1,71 +1,107 @@
 package by.ageenko.task5.entity;
 
+import by.ageenko.task5.exception.CustomRuntimeException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Port {
-    private static final Port instanse = new Port();
+    private static Port instanse;
     static Logger logger = LogManager.getLogger();
-    static final int MAX_STOCK_SIZE = 100;
+    static final int MAX_STOCK_SIZE = 1000;
     static final int MIN_STOCK_SIZE = 0;
-    static final int DEFAULT_STOCK_SIZE = 50;
-
+    static final int DEFAULT_STOCK_SIZE = 500;
+    private static Lock locker = new ReentrantLock(true);
+    private static AtomicBoolean create = new AtomicBoolean(false);
     private TimeUnit time = TimeUnit.SECONDS;
-    private int stockSize;
-    private List<Ship> store = new ArrayList<>();
+    private AtomicInteger portContainers = new AtomicInteger(DEFAULT_STOCK_SIZE);
+    private ArrayDeque<Pier> piers;
+    private Train train;
 
     private Port() {
-        stockSize = DEFAULT_STOCK_SIZE;
+
     }
-
-
     public static Port getInstanse() {
+        if (!create.get()){
+            locker.lock();
+            try {
+                if (instanse == null){
+                    instanse = new Port();
+                    create.getAndSet(true);
+                }
+            }finally {
+                locker.unlock();
+            }
+        }
         return instanse;
     }
 
-    public int getStockSize() {
-        return stockSize;
+    public AtomicInteger getPortContainers() {
+        return portContainers;
     }
 
-    public void addContainer(int stockSize) {
-        this.stockSize += stockSize;
+    public void setPortContainers(AtomicInteger portContainers) {
+        this.portContainers = portContainers;
     }
 
-    public void removeContainer(int stockSize) {
-        this.stockSize -= stockSize;
+    public void setPiers(ArrayDeque<Pier> piers) {
+        this.piers = piers;
     }
 
-    public List<Ship> getStore() {
-        return store;
-    }
-
-
-    public void addShip(Ship ship) {
-        store.add(ship);
-    }
-
-    public synchronized Ship getShip() {
-        if (!store.isEmpty()) {
-            for (Ship ship : store) {
-                store.remove(ship);
-                return ship;
-            }
-        } else {
-            logger.log(Level.WARN, "There are no ships in store = {}", store);
+    public Pier getPier(){
+        locker.lock();
+        Pier pier;
+        try {
+            pier = piers.poll();
+        } finally {
+            locker.unlock();
         }
-        return null;
+        return pier;
+    }
+    public void releasePier(Pier pier){
+        locker.lock();
+        try {
+            piers.add(pier);
+        }finally {
+            locker.unlock();
+        }
     }
 
-    public synchronized boolean isStockFull() {
-        return stockSize == MAX_STOCK_SIZE;
+    public synchronized int load(int container) {
+        if (portContainers.get() > MAX_STOCK_SIZE * 0.2) {
+            portContainers.addAndGet(-container);
+            System.out.println("container in port = " + portContainers.get());
+        } else {
+            try {
+                train.start();
+            } catch (Exception e) {
+                throw new CustomRuntimeException(e);
+            }
+        }
+        return container;
     }
 
-    public boolean isStockEmpty() {
-        return stockSize == MIN_STOCK_SIZE;
+    public int unload(int container) {
+        if (portContainers.get() < MAX_STOCK_SIZE * 0.8) {
+            portContainers.addAndGet(container);
+        } else {
+            locker.lock();
+            try {
+                train.start();
+            } finally {
+                locker.unlock();
+            }
+        }
+        return container;
     }
+
 }

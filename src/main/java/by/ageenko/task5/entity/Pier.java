@@ -11,7 +11,7 @@ public class Pier {
     public Pier() {
         this.id = IdGenerator.generateIdOfPier();
     }
-    public synchronized int getId() {
+    public int getId() {
         return id;
     }
 
