@@ -56,15 +56,17 @@ public class Ship extends Thread {
         Pier pier = null;
         try {
             pier = port.getPier();
-            switch (stateShip) {
-                case LOAD -> {
+            if (pier != null) {
+                switch (stateShip) {
+                    case LOAD -> {
                         port.load(100);
-                        logger.log(Level.INFO,"100 conteiners load to ship " + shipId + " from " + pier.getId());
+                        logger.log(Level.INFO, "100 conteiners load to ship " + shipId + " from " + pier.getId());
                     }
-                case UNLOAD -> port.unload(20);
-                case LOAD_UNLOAD -> {
-                    port.unload(3);
-                    port.load(4);
+                    case UNLOAD -> port.unload(20);
+                    case LOAD_UNLOAD -> {
+                        port.unload(3);
+                        port.load(4);
+                    }
                 }
             }
         } finally {

@@ -25,7 +25,6 @@ public class Port {
     private TimeUnit time = TimeUnit.SECONDS;
     private AtomicInteger portContainers = new AtomicInteger(DEFAULT_STOCK_SIZE);
     private ArrayDeque<Pier> piers;
-    private Train train;
 
     private Port() {
 
@@ -76,16 +75,13 @@ public class Port {
         }
     }
 
-    public synchronized int load(int container) {
+    public int load(int container) {
         if (portContainers.get() > MAX_STOCK_SIZE * 0.2) {
             portContainers.addAndGet(-container);
-            System.out.println("container in port = " + portContainers.get());
+            logger.log(Level.INFO, "container in port = {}", portContainers.get());
         } else {
-            try {
-                train.start();
-            } catch (Exception e) {
-                throw new CustomRuntimeException(e);
-            }
+            portContainers.addAndGet(DEFAULT_STOCK_SIZE);
+            logger.log(Level.INFO, "container in port after train = {}", portContainers.get());
         }
         return container;
     }
@@ -93,13 +89,10 @@ public class Port {
     public int unload(int container) {
         if (portContainers.get() < MAX_STOCK_SIZE * 0.8) {
             portContainers.addAndGet(container);
+            logger.log(Level.INFO,"container in port = {}", portContainers.get());
         } else {
-            locker.lock();
-            try {
-                train.start();
-            } finally {
-                locker.unlock();
-            }
+            portContainers.addAndGet(-DEFAULT_STOCK_SIZE);
+            logger.log(Level.INFO,"container in port after train = {}", portContainers.get());
         }
         return container;
     }
