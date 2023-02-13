@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,6 +22,7 @@ public class Port {
     static final int MIN_STOCK_SIZE = 0;
     static final int DEFAULT_STOCK_SIZE = 500;
     private static Lock locker = new ReentrantLock(true);
+    private static Condition condition = locker.newCondition();
     private static AtomicBoolean create = new AtomicBoolean(false);
     private TimeUnit time = TimeUnit.SECONDS;
     private AtomicInteger portContainers = new AtomicInteger(DEFAULT_STOCK_SIZE);
@@ -60,7 +62,9 @@ public class Port {
         locker.lock();
         Pier pier;
         try {
-            pier = piers.poll();
+            while ((pier = piers.poll()) == null) {
+                condition.awaitUninterruptibly();
+            }
         } finally {
             locker.unlock();
         }
@@ -70,6 +74,7 @@ public class Port {
         locker.lock();
         try {
             piers.add(pier);
+            condition.signal();
         }finally {
             locker.unlock();
         }
@@ -78,7 +83,6 @@ public class Port {
     public int load(int container) {
         if (portContainers.get() > MAX_STOCK_SIZE * 0.2) {
             portContainers.addAndGet(-container);
-            logger.log(Level.INFO, "container in port = {}", portContainers.get());
         } else {
             portContainers.addAndGet(DEFAULT_STOCK_SIZE);
             logger.log(Level.INFO, "container in port after train = {}", portContainers.get());
@@ -89,7 +93,6 @@ public class Port {
     public int unload(int container) {
         if (portContainers.get() < MAX_STOCK_SIZE * 0.8) {
             portContainers.addAndGet(container);
-            logger.log(Level.INFO,"container in port = {}", portContainers.get());
         } else {
             portContainers.addAndGet(-DEFAULT_STOCK_SIZE);
             logger.log(Level.INFO,"container in port after train = {}", portContainers.get());
