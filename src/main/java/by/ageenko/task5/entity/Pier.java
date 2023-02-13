@@ -3,7 +3,6 @@ package by.ageenko.task5.entity;
 import by.ageenko.task5.util.IdGenerator;
 
 import java.util.StringJoiner;
-import java.util.concurrent.Semaphore;
 
 public class Pier {
     private int id;
