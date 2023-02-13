@@ -22,7 +22,6 @@ public class Port {
     private static Lock locker = new ReentrantLock(true);
     private static Condition condition = locker.newCondition();
     private static AtomicBoolean create = new AtomicBoolean(false);
-    private TimeUnit time = TimeUnit.SECONDS;
     private AtomicInteger portContainers = new AtomicInteger(DEFAULT_STOCK_SIZE);
     private ArrayDeque<Pier> piers;
 

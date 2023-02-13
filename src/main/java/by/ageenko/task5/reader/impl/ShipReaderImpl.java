@@ -22,7 +22,7 @@ public class ShipReaderImpl implements ShipReader {
     @Override
     public Ship shipReader(String filename) throws ShipException {
         List<String> tempList;
-        String [] strTemp = {};
+        String [] strTemp;
         Path path = Paths.get(filename);
         if (!Files.exists(path)) {
             logger.log(Level.INFO, "file {} not exist", filename);

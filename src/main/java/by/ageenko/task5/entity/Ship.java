@@ -21,7 +21,9 @@ public class Ship extends Thread {
         this.shipId = IdGenerator.generateIdOfShip();
         if (containerAmount <= MAX_CAPACITY && containerAmount >= MIN_CAPACITY) {
             this.containerAmount = containerAmount;
-        }else this.containerAmount = MIN_CAPACITY;
+        } else {
+            this.containerAmount = MIN_CAPACITY;
+        }
         this.stateShip = stateShip;
     }
 
@@ -55,26 +57,24 @@ public class Ship extends Thread {
         Pier pier = null;
         try {
             pier = port.getPier();
-            if (pier != null) {
-                switch (stateShip) {
-                    case LOAD -> {
-                        int loadValue = MAX_CAPACITY - containerAmount;
-                        port.load(loadValue);
-                        logger.log(Level.INFO, "{} conteiners load to ship {} from Pier {}",loadValue ,shipId, pier.getId());
-                        logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
-                    }
-                    case UNLOAD -> {
-                        port.unload(containerAmount);
-                        logger.log(Level.INFO, "{} conteiners unload from ship {} to Pier {}",containerAmount ,shipId, pier.getId());
-                        logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
-                    }
-                    case LOAD_UNLOAD -> {
-                        int loadValue = MAX_CAPACITY - containerAmount;
-                        port.unload(containerAmount);
-                        port.load(loadValue);
-                        logger.log(Level.INFO, "{}/{} conteiners unload/load to/from ship {} from/to Pier {}",containerAmount,loadValue ,shipId, pier.getId());
-                        logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
-                    }
+            switch (stateShip) {
+                case LOAD -> {
+                    int loadValue = MAX_CAPACITY - containerAmount;
+                    port.load(loadValue);
+                    logger.log(Level.INFO, "{} conteiners load to ship {} from Pier {}", loadValue, shipId, pier.getId());
+                    logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
+                }
+                case UNLOAD -> {
+                    port.unload(containerAmount);
+                    logger.log(Level.INFO, "{} conteiners unload from ship {} to Pier {}", containerAmount, shipId, pier.getId());
+                    logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
+                }
+                case LOAD_UNLOAD -> {
+                    int loadValue = MAX_CAPACITY - containerAmount;
+                    port.unload(containerAmount);
+                    port.load(loadValue);
+                    logger.log(Level.INFO, "{}/{} conteiners unload/load to/from ship {} from/to Pier {}", containerAmount, loadValue, shipId, pier.getId());
+                    logger.log(Level.INFO, "container in port = {}", port.getPortContainers());
                 }
             }
         } finally {
