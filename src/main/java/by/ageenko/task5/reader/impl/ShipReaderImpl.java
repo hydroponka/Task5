@@ -33,7 +33,7 @@ public class ShipReaderImpl implements ShipReader {
             strTemp = tempList.get(0).split(SPACE_SEPARATOR);
         }
         catch (IOException e) {
-            throw new ShipException(e);
+            throw new ShipException("File is empty");
         }
         return new Ship(Integer.parseInt(strTemp[0]), Ship.StateShip.valueOf(strTemp[1]));
     }
